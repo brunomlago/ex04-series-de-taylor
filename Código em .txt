@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def cosseno_otimizado(x, n=5):
+    soma = np.ones_like(x) if isinstance(x, np.ndarray) else 1.0
+    termo = np.ones_like(x) if isinstance(x, np.ndarray) else 1.0
+    
+    for i in range(1, n):
+        termo = termo * (-x**2) / ((2 * i) * (2 * i - 1))
+        soma = soma + termo
+        
+    return soma
+
+# Plotando a Série de Taylor otimizada com N=5
+x_vals_5 = np.linspace(-2 * np.pi, 2 * np.pi, 200)
+y_cos_builtin_5 = np.cos(x_vals_5)
+y_cos_taylor_5 = cosseno_otimizado(x_vals_5, n=5)
+diferenca_5 = np.abs(y_cos_builtin_5 - y_cos_taylor_5)
+
+plt.figure(figsize=(10, 5))
+plt.plot(x_vals_5, diferenca_5, label="Erro com N=5", color='red')
+plt.title("Diferença entre cos(x) built-in e Taylor (N=5)")
+plt.xlabel("x (radianos)")
+plt.ylabel("Erro Absoluto")
+plt.axvline(-np.pi, color='gray', linestyle='--', label=r'$-\pi$ a $\pi$')
+plt.axvline(np.pi, color='gray', linestyle='--')
+plt.grid(True)
+plt.legend()
+plt.show()
+
+# Plotando a Série de Taylor para precisão com N=20
+x_vals_20 = np.linspace(-15, 15, 400)
+y_cos_builtin_20 = np.cos(x_vals_20)
+y_cos_taylor_20 = cosseno_otimizado(x_vals_20, n=20)
+diferenca_20 = np.abs(y_cos_builtin_20 - y_cos_taylor_20)
+
+plt.figure(figsize=(10, 5))
+plt.plot(x_vals_20, diferenca_20, label="Erro com N=20", color='purple')
+plt.title("Diferença entre cos(x) built-in e Taylor (N=20)")
+plt.xlabel("x (radianos)")
+plt.ylabel("Erro Absoluto")
+plt.axvline(-12, color='gray', linestyle='--', label='Limites práticos [-12, 12]')
+plt.axvline(12, color='gray', linestyle='--')
+plt.ylim(-0.01, 0.1)
+plt.grid(True)
+plt.legend()
+plt.show()
